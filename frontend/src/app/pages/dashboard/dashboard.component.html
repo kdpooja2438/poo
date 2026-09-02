@@ -1,0 +1,73 @@
+<h2 class="fw-bold mb-4">Dashboard</h2>
+
+<div class="alert alert-danger" *ngIf="loadError">{{ loadError }}</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="stat-card card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="text-secondary small">Total Rooms</div>
+        <div class="fs-2 fw-bold">{{ totalRooms }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="text-secondary small">Available Rooms</div>
+        <div class="fs-2 fw-bold text-success">{{ availableRooms }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="text-secondary small">Occupied Rooms</div>
+        <div class="fs-2 fw-bold text-danger">{{ occupiedRooms }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="text-secondary small">Today's Check-ins</div>
+        <div class="fs-2 fw-bold text-primary">{{ todaysCheckIns }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-body">
+    <h5 class="fw-bold mb-3">Room Overview</h5>
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Room No</th>
+            <th>Room Type</th>
+            <th>Price</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let room of rooms">
+            <td>{{ room.roomNumber }}</td>
+            <td>{{ room.roomType }}</td>
+            <td>₹{{ room.price }}</td>
+            <td>
+              <span
+                class="badge rounded-pill"
+                [class.text-bg-success]="room.status === 'AVAILABLE'"
+                [class.text-bg-danger]="room.status === 'OCCUPIED'"
+                [class.text-bg-warning]="room.status === 'MAINTENANCE'"
+              >
+                {{ room.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

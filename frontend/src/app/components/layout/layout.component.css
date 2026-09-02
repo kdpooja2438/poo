@@ -1,0 +1,12 @@
+.app-shell {
+  height: 100vh;
+}
+
+.main-area {
+  min-width: 0;
+}
+
+.content {
+  background: #f5f7fb;
+  overflow-y: auto;
+}

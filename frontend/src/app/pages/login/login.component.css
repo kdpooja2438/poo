@@ -1,0 +1,26 @@
+.login-page {
+  min-height: 100vh;
+  background: #f5f7fb;
+}
+
+.brand-panel {
+  width: 45%;
+  background: linear-gradient(135deg, #0d6efd, #6610f2);
+}
+
+.brand-icon {
+  font-size: 4rem;
+}
+
+.form-panel {
+  padding: 2rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
