@@ -13,6 +13,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Gitleaks
+        run: |
+          curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz -o gitleaks.tar.gz
+          tar -xzf gitleaks.tar.gz gitleaks
+          sudo mv gitleaks /usr/local/bin/
+
+      - name: Run Gitleaks (scan for committed secrets)
+        run: gitleaks detect --source . --verbose
 
       - name: Set up Java 21
         uses: actions/setup-java@v4
@@ -52,3 +63,37 @@ jobs:
 
       - name: Build frontend Docker image
         run: docker build -t hotel-frontend:${{ github.sha }} ./frontend
+
+      - name: Scan backend image with Trivy
+        uses: aquasecurity/trivy-action@0.36.0
+        with:
+          image-ref: hotel-backend:${{ github.sha }}
+          format: table
+          severity: HIGH,CRITICAL
+          exit-code: '0'
+
+      - name: Scan frontend image with Trivy
+        uses: aquasecurity/trivy-action@0.36.0
+        with:
+          image-ref: hotel-frontend:${{ github.sha }}
+          format: table
+          severity: HIGH,CRITICAL
+          exit-code: '0'
+
+      - name: Grep check - no .env files committed
+        run: |
+          matches=$(find . -name "*.env" -not -path "*/node_modules/*" -not -path "*/.git/*")
+          if [ -n "$matches" ]; then
+            echo "Found .env file(s) that should not be committed:"
+            echo "$matches"
+            exit 1
+          fi
+          echo "No .env files found."
+
+      - name: Grep check - obvious hardcoded credential patterns
+        run: |
+          echo "This is a naive, advisory-only text search - see explanation for its limits."
+          grep -rEn "(password|passwd|secret|api_key)\s*=\s*['\"][^'\"]{3,}['\"]" \
+            --include="*.java" --include="*.properties" --include="*.yml" --include="*.ts" \
+            --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=target --exclude-dir=.git . \
+            | grep -v '\${' || echo "No obvious hardcoded credential patterns found."
