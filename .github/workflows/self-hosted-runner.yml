@@ -12,18 +12,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Show runner details
-        shell: powershell
+        shell: cmd
         run: |
-          Write-Host "Runner name: $env:RUNNER_NAME"
-          Write-Host "Operating system: $env:RUNNER_OS"
-          Write-Host "Architecture: $env:RUNNER_ARCH"
-          Write-Host "Machine: $env:COMPUTERNAME"
-          Write-Host "Workspace: $env:GITHUB_WORKSPACE"
+          echo Runner name: %RUNNER_NAME%
+          echo Operating system: %RUNNER_OS%
+          echo Architecture: %RUNNER_ARCH%
+          echo Machine: %COMPUTERNAME%
+          echo Workspace: %GITHUB_WORKSPACE%
 
       - name: Verify repository checkout
-        shell: powershell
+        shell: cmd
         run: |
-          if (-not (Test-Path "$env:GITHUB_WORKSPACE\README.md")) {
-            throw "README.md was not checked out."
-          }
-          Write-Host "Checked out repository on the self-hosted runner."
+          if not exist "%GITHUB_WORKSPACE%\README.md" exit /b 1
+          echo Checked out repository on the self-hosted runner.
