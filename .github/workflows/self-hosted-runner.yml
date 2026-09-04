@@ -1,0 +1,29 @@
+name: Self-hosted runner verification
+
+on:
+  workflow_dispatch:
+
+jobs:
+  verify-runner:
+    runs-on: [self-hosted, windows, x64]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show runner details
+        shell: pwsh
+        run: |
+          Write-Host "Runner name: $env:RUNNER_NAME"
+          Write-Host "Operating system: $env:RUNNER_OS"
+          Write-Host "Architecture: $env:RUNNER_ARCH"
+          Write-Host "Machine: $env:COMPUTERNAME"
+          Write-Host "Workspace: $env:GITHUB_WORKSPACE"
+
+      - name: Verify repository checkout
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "$env:GITHUB_WORKSPACE\README.md")) {
+            throw "README.md was not checked out."
+          }
+          Write-Host "Checked out repository on the self-hosted runner."
