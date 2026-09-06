@@ -55,7 +55,7 @@ export class LoginComponent {
         this.isSubmitting = false;
         this.loginError =
           err.status === 0
-            ? 'Cannot reach the server. Is the backend running on http://localhost:8080?'
+            ? 'Cannot reach the server. Is the backend running on http://localhost:8081?'
             : err.status === 401
               ? 'Incorrect email or password.'
               : 'Unable to sign in. Please try again.';
