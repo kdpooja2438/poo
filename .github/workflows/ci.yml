@@ -30,10 +30,19 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+          cache: maven
 
       - name: Build backend
         working-directory: ./backend
-        run: mvn -B clean package -DskipTests
+        run: |
+          for attempt in 1 2 3; do
+            mvn -B clean package -DskipTests && exit 0
+            if [ "$attempt" -lt 3 ]; then
+              echo "Maven download/build attempt $attempt failed; retrying..."
+              sleep $((attempt * 20))
+            fi
+          done
+          exit 1
 
       - name: Run backend tests
         working-directory: ./backend
