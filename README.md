@@ -29,7 +29,7 @@ project/
 
 ## Running locally (Phase 1)
 
-**Backend** (http://localhost:8080):
+**Backend** (http://localhost:8081):
 
 ```bash
 cd backend

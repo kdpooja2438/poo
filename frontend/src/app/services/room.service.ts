@@ -25,7 +25,7 @@ export class RoomService {
         catchError((err: HttpErrorResponse) => {
           this.loadErrorSubject.next(
             err.status === 0
-              ? 'Cannot reach the server. Is the backend running on http://localhost:8080?'
+              ? 'Cannot reach the server. Is the backend running on http://localhost:8081?'
               : 'Failed to load rooms from the server.'
           );
           return of<Room[]>([]);
