@@ -1,0 +1,34 @@
+name: CD (minikube via self-hosted runner)
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build backend image into minikube
+        working-directory: ./backend
+        run: minikube image build -t hotel-backend:latest .
+
+      - name: Build frontend image into minikube
+        working-directory: ./frontend
+        run: minikube image build -t hotel-frontend:latest .
+
+      - name: Apply k8s manifests
+        run: kubectl apply -f k8s/backend-config.yaml -f k8s/backend.yaml
+
+      - name: Roll out backend
+        run: |
+          kubectl rollout restart deployment/backend -n hotel
+          kubectl rollout status deployment/backend -n hotel --timeout=120s
+
+      - name: Roll out frontend
+        run: |
+          kubectl rollout restart deployment/frontend -n hotel
+          kubectl rollout status deployment/frontend -n hotel --timeout=120s
