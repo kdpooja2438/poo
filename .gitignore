@@ -18,3 +18,10 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/crash.log
+terraform/deployment_info.txt
